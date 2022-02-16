@@ -11,7 +11,7 @@ public class HotelInventoryCalendar {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     @Column(name = "Id")
-    private Integer id ;
+    private Long id ;
 
     @Column(name = "Available")
     private Integer available ;
@@ -26,17 +26,18 @@ public class HotelInventoryCalendar {
         System.out.println("HotelInventoryCalendar object is created :");
     }
 
-    public HotelInventoryCalendar(Integer available, Integer sold, Integer block) {
+    public HotelInventoryCalendar(Long id, Integer available, Integer sold, Integer block) {
+        this.id = id;
         this.available = available;
         this.sold = sold;
         this.block = block;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

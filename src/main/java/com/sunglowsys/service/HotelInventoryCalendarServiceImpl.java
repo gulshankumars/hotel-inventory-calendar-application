@@ -2,52 +2,54 @@ package com.sunglowsys.service;
 
 import com.sunglowsys.domain.HotelInventoryCalendar;
 import com.sunglowsys.repository.HotelInventoryCalendarRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class HotelInventoryCalendarServiceImpl implements HotelInventoryCalendarService {
 
-    @Autowired
-    private HotelInventoryCalendarRepository hotelInventoryCalendarRepository;
+    private final Logger log = LoggerFactory.getLogger(HotelInventoryCalendarServiceImpl.class);
+
+    private final HotelInventoryCalendarRepository hotelInventoryCalendarRepository;
+
+    public HotelInventoryCalendarServiceImpl(HotelInventoryCalendarRepository hotelInventoryCalendarRepository) {
+        this.hotelInventoryCalendarRepository = hotelInventoryCalendarRepository;
+    }
 
     @Override
     public HotelInventoryCalendar create(HotelInventoryCalendar hotelInventoryCalendar) {
+        log.debug("Request to create HotelInventoryCalendar : {}", hotelInventoryCalendar);
         return hotelInventoryCalendarRepository.save(hotelInventoryCalendar);
     }
 
     @Override
-    public HotelInventoryCalendar update(HotelInventoryCalendar hotelInventoryCalendar, Integer id) {
-        HotelInventoryCalendar hotelInventoryCalendar1 = hotelInventoryCalendarRepository.findById(id).get();
-        hotelInventoryCalendar1.setAvailable(hotelInventoryCalendar1.getAvailable());
-        hotelInventoryCalendar1.setSold(hotelInventoryCalendar1.getSold());
-        hotelInventoryCalendar1.setBlock(hotelInventoryCalendar1.getBlock());
+    public HotelInventoryCalendar update(HotelInventoryCalendar hotelInventoryCalendar, Long id) {
+        log.debug("Request to update HotelInventoryCalendar : {}", hotelInventoryCalendar);
         return hotelInventoryCalendarRepository.save(hotelInventoryCalendar);
     }
 
     @Override
-    public List<HotelInventoryCalendar> findAll() {
-        return hotelInventoryCalendarRepository.findAll();
+    public Page<HotelInventoryCalendar> findAll(Pageable pageable) {
+        log.debug("Request to getAll HotelInventoryCalendars : {}",pageable.toString());
+        return hotelInventoryCalendarRepository.findAll(pageable);
     }
 
     @Override
-    public HotelInventoryCalendar findById(Integer id) {
-        Optional<HotelInventoryCalendar> optional = hotelInventoryCalendarRepository.findById(id);
-        HotelInventoryCalendar hotelInventoryCalendar = null;
-        if (optional.isPresent()){
-            hotelInventoryCalendar = optional.get();
-        }
-        else {
-            throw new RuntimeException("Hotel-Inventory-Calendar not found for id:" +id);
-        }
-        return hotelInventoryCalendar;
+    public Optional<HotelInventoryCalendar> findById(Long id) {
+       log.debug("Request to get HotelInventoryCalendar : {}", id);
+        return hotelInventoryCalendarRepository.findById(id);
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(Long id) {
+        log.debug("Request to delete HotelInventoryCalendar : {}", id);
         hotelInventoryCalendarRepository.deleteById(id);
     }
 }
